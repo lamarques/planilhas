@@ -7,21 +7,11 @@
  */
 require_once __DIR__ . "/autoload.php";
 
-$sessao = new Sessao();
-
-if (!$sessao->verificaSessao()) {
-    $sessao->setCliete();
-    header('location: login.php');
-    exit();
-}
-
+use Classes\Conexao;
 try {
     $pdo = Conexao::open('sistema');
-
-    $sessaoFuncionario = $sessao->getValor('sessao_funcionario');
-    $smarty->assign('funcionario', $sessaoFuncionario);
-} catch (PDOException $e) {
-    print_r($e);
+} catch (\PDOException $e) {
+    new \Classes\Excecao($e);
 }
 
 $smarty->display('index.tpl');

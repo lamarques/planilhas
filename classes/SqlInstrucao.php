@@ -1,4 +1,6 @@
 <?php
+
+namespace Classes;
 /**
  * classe SqlInstrucao
  * Esta classe provê os métodos em comum entre todas instruções

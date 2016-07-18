@@ -8,6 +8,8 @@
 
 require_once __DIR__ . "/autoload.php";
 
+use Classes\Login;
+
 if ( isset( $_GET['origem_externa'] ) )
     $_POST = $_GET;
 

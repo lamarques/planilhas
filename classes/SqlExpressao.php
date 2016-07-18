@@ -1,4 +1,6 @@
 <?php
+
+namespace Classes;
 /*
  * classe SqlExpressao
  * classe abstrata para gerenciar expressões

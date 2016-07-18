@@ -7,10 +7,12 @@
  */
 require_once __DIR__ . "/autoload.php";
 
+use Classes\Conexao;
+
 try {
     $pdo = Conexao::open('sistema');
 } catch (PDOException $e) {
-    print_r($e);
+    new \Classes\Excecao($e);
 }
 
 $smarty->display('login.tpl');

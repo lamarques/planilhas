@@ -1,5 +1,7 @@
 <?php
 
+namespace Classes;
+
 /**
  * Class responsavel em padronizar dados dos formularios
  * @autor Cristian Cardoso

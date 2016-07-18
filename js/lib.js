@@ -1630,8 +1630,15 @@ function dadosErrados(json) {
     }
     return erro;
 }
-function ExcluirPadrao(botao, form, id, pagina, div, lingua) {
+function ExcluirPadrao(botao, form, id, pagina, div, definitivo) {
     try {
+
+        if(definitivo){
+            definitivo = 'true'
+        } else {
+            definitivo = 'false'
+        }
+
         DesabilitaCampo(botao);
         if (!confirm("Deseja realmente excluir?")) {
             HabilitaCampo(botao);
@@ -1667,10 +1674,10 @@ function ExcluirPadrao(botao, form, id, pagina, div, lingua) {
                     }
                 }
             } else if (ajax.readyState != 4) {
-                GetId('Aguardando' + botao.id).innerHTML = '<img src="imagem/aguardando.gif">';
+                GetId('Aguardando' + botao.id).innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
             }
         };
-        var valores = "acao=ExcluirPadrao&id_form=" + id + "&form=" + form;
+        var valores = "acao=ExcluirPadrao&id_form=" + id + "&form=" + form + "&definitivo=" + definitivo;
         Ajax.Solicitacao("acao.php", valores, Retorno);
         Ajax.Solicitar();
     } catch (e) {

@@ -1,4 +1,6 @@
 <?php
+
+namespace Classes;
 /**
  * classe SqlSelect
  * Esta classe provê meios para manipulação de uma instrução de SELECT no banco de dados

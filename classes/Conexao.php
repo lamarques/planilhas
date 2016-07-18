@@ -1,4 +1,9 @@
 <?php
+
+namespace Classes;
+
+use Classes\ConexaoParametros;
+
 final class Conexao {
 
     private static $coon = array();
@@ -43,7 +48,7 @@ final class Conexao {
                     $db['type'] = 'sqlite';
                     break;
                 default :
-                    throw new PDOException("Banco n&atilde;o encontrado");
+                    throw new \PDOException("Banco n&atilde;o encontrado");
             }
             $user = isset($db['user']) ? $db['user'] : NULL;
             $pass = isset($db['pass']) ? $db['pass'] : NULL;
@@ -53,30 +58,30 @@ final class Conexao {
             $port = isset($db['port']) ? $db['port'] : NULL;
             switch ($type) {
                 case 'mdb' :
-                    self::$coon[$banco] = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb)}; Dbq={$name}; Uid={$user}");
+                    self::$coon[$banco] = new \PDO("odbc:Driver={Microsoft Access Driver (*.mdb)}; Dbq={$name}; Uid={$user}");
                     break;
                 case 'pgsql' :
                     $port = $port ? $port : '5432';
-                    self::$coon[$banco] = new PDO("pgsql:dbname={$name}; user={$user}; password={$pass}; host=$host; port={$port}");
+                    self::$coon[$banco] = new \PDO("pgsql:dbname={$name}; user={$user}; password={$pass}; host=$host; port={$port}");
                     break;
                 case 'mysql' :
                     $port = $port ? $port : '3306';
-                    self::$coon[$banco] = new PDO("mysql:host={$host}; port={$port}; dbname={$name}", $user, $pass);//, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+                    self::$coon[$banco] = new \PDO("mysql:host={$host}; port={$port}; dbname={$name}", $user, $pass);//, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
                     break;
                 case 'sqlite' :
-                    self::$coon[$banco] = new PDO("sqlite:{$name}");
+                    self::$coon[$banco] = new \PDO("sqlite:{$name}");
                     break;
                 case 'ibase' :
-                    self::$coon[$banco] = new PDO("firebird:dbname={$name}", $user, $pass);
+                    self::$coon[$banco] = new \PDO("firebird:dbname={$name}", $user, $pass);
                     break;
                 case 'oci8' :
-                    self::$coon[$banco] = new PDO("oci:dbname={$name}", $user, $pass);
+                    self::$coon[$banco] = new \PDO("oci:dbname={$name}", $user, $pass);
                     break;
                 case 'mssql' :
-                    self::$coon[$banco] = new PDO("mssql:host={$host},1433; dbname={$name}", $user, $pass);
+                    self::$coon[$banco] = new \PDO("mssql:host={$host},1433; dbname={$name}", $user, $pass);
                     break;
             }
-            self::$coon[$banco]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$coon[$banco]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
         return self::$coon[$banco];
     }

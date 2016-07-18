@@ -1,64 +1,57 @@
 <?php
 
+namespace Classes;
+
 class Menu {
 
+    private $menus = array();
+    private $permissao = 0;
     private $menu;
-    private $id_usuario;
 
     /**
-     * Define para qual usuario devera ser construido o menu.
-     *
-     * @param int $id_usuario id do usuario
+     * @return array
      */
-    public function setIdUsuario($id_usuario) {
-        $this->id_usuario = $id_usuario;
+    public function getMenus()
+    {
+        return $this->menus;
     }
 
     /**
-     * Responsavel em dar inicio a montagem do menu.
-     *
-     * @return string Ira retornar uma string do menu
+     * @param array $menus
      */
-    public function montaMenu() {
-        try {
-            $pdo = Conexao::open('sistema');
+    public function setMenus($menus)
+    {
+        $this->menus = $menus;
+    }
 
-            $sql = "
-                SELECT  *
-                FROM modulos.menus
-                JOIN modulos.modulo ON modulo.id_menus = menus.id_menus
-                JOIN modulos.permissoes on permissoes.id_modulo = modulo.id_modulo
-                WHERE (permissoes.ler IS TRUE OR permissoes.editar IS TRUE OR permissoes.excluir IS TRUE OR permissoes.criar IS TRUE)
-                AND permissoes.id_usuarios = :id_usuarios
-            ";
-            $consulta = $pdo->prepare($sql);
-            $consulta->bindParam(':id_usuarios', $this->id_usuario, PDO::PARAM_INT);
-            $consulta->execute();
-            $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
-            $menuAtual = '';
-            $pasta = "";
-            foreach ($resultado as $menu) {
-                if($menuAtual != $menu['nome_menu']){
-                    $pasta .= (!empty($pasta)) ? "</ul></li>" : "";
-                    $pasta .= "<li class='treeview'>
-                                  <a href='javascript: Void(0);'>
-                                    <i class='fa fa-dashboard'></i> <span>{$menu['nome_menu']}</span> <i class='fa fa-angle-left pull-right'></i>
-                                  </a>
-                                  <ul class='treeview-menu'>";
-                    $menuAtual = $menu['nome_menu'];
-                }
+    /**
+     * @return int
+     */
+    public function getPermissao()
+    {
+        return $this->permissao;
+    }
 
-                $pasta .= "<li><a href=\"javascript: Load('" . htmlspecialchars($menu['caminho']) . "','conteudo');\"><i class=\"fa fa-circle-o\"></i> {$menu['nome_modulo']}</a></li>";
+    /**
+     * @param int $permissao
+     */
+    public function setPermissao($permissao)
+    {
+        $this->permissao = $permissao;
+    }
 
+
+    public function geraMenu(){
+        foreach ($this->getMenus() as $menu){
+            $leitura = $menu['permisoes']['leitura'];
+            $escrita = $menu['permisoes']['escrita'];
+            if($menu['exibir'] === true && (in_array($this->permissao, $leitura) || in_array($this->permissao, $escrita))){
+                $this->menu .= "<li>
+                        <a href=\"javascript: Load('{$menu['url']}', 'conteudo');\">
+                            <span>{$menu['name']}</span>
+                        </a>
+                    </li>";
             }
-            $pasta .= (!empty($pasta)) ? "</ul></li>":"";
-            $this->menu = $pasta;
-            unset($pdo);
-        } catch (PDOException $e) {
-            echo "<div class=\"content-wrapper\" id=\"erros\"><section><pre>";
-            print_r($e);
-            echo "</pre></section></div>";
-            exit;
         }
     }
 

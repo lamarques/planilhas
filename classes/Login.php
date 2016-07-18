@@ -1,5 +1,12 @@
 <?php
 
+namespace Classes;
+
+use Classes\Conexao;
+use Classes\TrataDados;
+use Classes\Sessao;
+use Classes\Excecao;
+
 /**
  * Class Login{}
  * Responsavel em controlar o login da area administrativa
@@ -33,12 +40,12 @@ class Login
                         WHERE usuario = :usuario AND  senha = :senha AND  ativo = true";
                 $pdo = Conexao::open('sistema');
                 $consulta = $pdo->prepare($sql);
-                $consulta->bindParam(':usuario', $arrDados['usuario'], PDO::PARAM_STR);
+                $consulta->bindParam(':usuario', $arrDados['usuario'], \PDO::PARAM_STR);
                 $senhaCript = md5($arrDados['senha']);
-                $consulta->bindParam(':senha', $senhaCript, PDO::PARAM_STR);
+                $consulta->bindParam(':senha', $senhaCript, \PDO::PARAM_STR);
                 $consulta->execute();
                 $numeroRegistros = $consulta->rowCount();
-                $linha = $consulta->fetch(PDO::FETCH_ASSOC);
+                $linha = $consulta->fetch(\PDO::FETCH_ASSOC);
                 if ($numeroRegistros == 1) {
                     $session->setValor('sessao_usuario', $linha['usuario']);
                     $session->setValor('sessao_id_funcionarios', $linha['id_funcionarios']);
@@ -54,7 +61,7 @@ class Login
                 } else {
                     $retorno['resultado'] = 'nao';
                 }
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 if ($e->getCode() == '3F000') {
                     $retorno['resultado'] = 'criar_tabela';
                 } else {
@@ -82,7 +89,7 @@ class Login
             $session = new Sessao();
             $session->limpaSessao();
             $retorno['resultado'] = 'sim';
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             new Excecao($e);
         }
         return json_encode($retorno);
@@ -99,13 +106,13 @@ class Login
             $pdo = Conexao::open('sistema');
             $consulta = $pdo->prepare('SELECT COUNT(*) AS numero_registros FROM cadastros.usuarios');
             $consulta->execute();
-            $linha = $consulta->fetch(PDO::FETCH_ASSOC);
+            $linha = $consulta->fetch(\PDO::FETCH_ASSOC);
             if ($linha['numero_registros'] == 0) {
                 return true;
             } else {
                 return false;
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             new Excecao($e);
         }
     }
@@ -126,11 +133,11 @@ class Login
                         WHERE hotel.usuario = :usuario AND hotel.senha	= :senha;';
                 $pdo = Conexao::open('sistema');
                 $consulta = $pdo->prepare($sql);
-                $consulta->bindParam(':usuario', $dados['usuario'], PDO::PARAM_STR);
-                $consulta->bindParam(':senha', $dados['senha'], PDO::PARAM_STR);
+                $consulta->bindParam(':usuario', $dados['usuario'], \PDO::PARAM_STR);
+                $consulta->bindParam(':senha', $dados['senha'], \PDO::PARAM_STR);
                 $consulta->execute();
                 $numeroRegistros = $consulta->rowCount();
-                $linha = $consulta->fetch(PDO::FETCH_ASSOC);
+                $linha = $consulta->fetch(\PDO::FETCH_ASSOC);
                 $session = new Sessao();
 
                 if ($numeroRegistros == 1) {
@@ -141,7 +148,7 @@ class Login
                 } else {
                     $retorno['resultado'] = 'nao';
                 }
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 new Excecao($e);
                 $retorno['resultado'] = 'erro';
                 $retorno['erro'] = 'consulta';
@@ -190,12 +197,12 @@ class Login
                     desc
                         limit :quantidade";
             $consulta = $pdo->prepare($sql);
-            $consulta->bindParam(":id_usuario", $idUsuario, PDO::PARAM_INT);
-            $consulta->bindParam(":quantidade", $quantidade, PDO::PARAM_INT);
+            $consulta->bindParam(":id_usuario", $idUsuario, \PDO::PARAM_INT);
+            $consulta->bindParam(":quantidade", $quantidade, \PDO::PARAM_INT);
             $consulta->execute();
-            $dados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+            $dados = $consulta->fetchAll(\PDO::FETCH_ASSOC);
             return $dados;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             new Excecao($e);
         }
     }
@@ -211,7 +218,7 @@ class Login
 
         $objCadastrosUsuario = new CadastrosUsuarioExecuta($pdo);
         $consulta = $objCadastrosUsuario->listar(array('chave'), array(array('id_usuario', '=', $arrDados['id_usuario'])));
-        $retorno = $consulta->fetch(PDO::FETCH_ASSOC);
+        $retorno = $consulta->fetch(\PDO::FETCH_ASSOC);
 
         return $retorno['chave'];
     }

@@ -1,4 +1,6 @@
 <?php
+
+namespace Classes;
 /**
  * classe SqlFiltro
  * Esta classe provê uma interface para definição de filtros de seleção

@@ -1,4 +1,6 @@
 <?php
+
+namespace Classes;
 /**
  * classe SqlCriterio
  * Esta classe provê uma interface utilizada para definição de critérios

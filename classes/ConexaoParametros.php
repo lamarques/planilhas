@@ -1,10 +1,7 @@
 <?php
 
-/**
- * Classe responsável por organizar as conexoes dos clientes.
- *
- * @author tiago
- */
+namespace Classes;
+
 class ConexaoParametros {
 
     public $arrParametro = array();
